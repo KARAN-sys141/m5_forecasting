@@ -35,13 +35,13 @@ With over **61.7% of historical data consisting of exact zeros**, traditional re
 
 ```mermaid
 graph TD
-    UI[Frontend Dashboard<br/>HTML/CSS/JS] <-->|REST API| API[FastAPI Backend]
-    API -->|Real-Time Eng| FE[Dynamic Feature Engine]
-    API -->|O(1) Lookup| ENC[Target Encoders]
-    API -->|Predict| LGB[LightGBM Forecaster]
-    LGB -.->|Logged via| MLF[MLflow Registry]
-    ENC -.->|Tracked via| DVC[DVC Pipeline]
-    LGB -.->|Tracked via| DVC
+    UI["Frontend Dashboard"] -->|"REST API"| API["FastAPI Backend"]
+    API -->|"Real-Time Eng"| FE["Dynamic Feature Engine"]
+    API -->|"Fast Lookup"| ENC["Target Encoders"]
+    API -->|"Predict"| LGB["LightGBM Forecaster"]
+    LGB -.->|"Logged via"| MLF["MLflow Registry"]
+    ENC -.->|"Tracked via"| DVC["DVC Pipeline"]
+    LGB -.->|"Tracked via"| DVC
 ```
 
 ---
