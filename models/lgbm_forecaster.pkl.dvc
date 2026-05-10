@@ -1,0 +1,5 @@
+outs:
+- md5: 7fbea12c849df0be6109847e1d288f30
+  size: 394999
+  hash: md5
+  path: lgbm_forecaster.pkl

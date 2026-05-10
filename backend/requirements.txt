@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+numpy
+lightgbm
+scikit-learn
+joblib
+pyarrow
+mlflow
+dvc
+dvc-gdrive

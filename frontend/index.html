@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M5 Demand Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="brand"><i class="fa-solid fa-chart-pie"></i><h2>M5 Intel</h2></div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard"><i class="fa-solid fa-house"></i> Dashboard</li>
+                <li data-target="predict"><i class="fa-solid fa-bolt"></i> Prediction Engine</li>
+                <li data-target="health"><i class="fa-solid fa-server"></i> MLOps Health</li>
+                <li data-target="story"><i class="fa-solid fa-book-open"></i> Architecture Story</li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h1 id="page-title">Executive Dashboard</h1>
+            </header>
+
+            <section id="dashboard" class="view-section active">
+                <div class="kpi-grid">
+                    <div class="kpi-card"><h3>Overall RMSSE</h3><p class="highlight">0.6172</p></div>
+                    <div class="kpi-card"><h3>Variance Explained</h3><p class="highlight">59.8%</p></div>
+                    <div class="kpi-card"><h3>Total Predictions</h3><p class="highlight" id="total-preds">0</p></div>
+                    <div class="kpi-card"><h3>AI Core</h3><p class="highlight">Tweedie LGBM</p></div>
+                </div>
+                
+                <div class="charts-row-main">
+                    <div class="chart-container">
+                        <div class="chart-header">1-Month Volume Accuracy (Portfolio Backtest)</div>
+                        <div class="canvas-wrapper"><canvas id="accuracyChart"></canvas></div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">Real-Time Demand Classes</div>
+                        <div class="canvas-wrapper"><canvas id="demandPieChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="charts-row-half mt-25">
+                    <div class="chart-container">
+                        <div class="chart-header">Live Inference Trend</div>
+                        <div class="canvas-wrapper"><canvas id="volumeChart"></canvas></div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">API Latency (ms) Tracker</div>
+                        <div class="canvas-wrapper"><canvas id="latencyChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="charts-row-third mt-25">
+                    <div class="chart-container">
+                        <div class="chart-header">Weekly Seasonality</div>
+                        <div class="canvas-wrapper"><canvas id="seasonalityChart"></canvas></div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">Price Elasticity</div>
+                        <div class="canvas-wrapper"><canvas id="priceImpactChart"></canvas></div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">Stockout Risk</div>
+                        <div class="canvas-wrapper"><canvas id="stockoutChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel mt-30">
+                    <h3>Prediction Log & Inventory Requirements</h3>
+                    <div class="table-responsive">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Store</th>
+                                    <th>Item ID</th>
+                                    <th>Exact Output</th>
+                                    <th>Safety Stock</th>
+                                    <th>Demand Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="predict" class="view-section hidden">
+                <div class="predict-layout">
+                    <div class="form-card glass-panel">
+                        <h3>Generate AI Forecast</h3>
+                        <div class="input-group">
+                            <label>Retail Location (Store ID)</label>
+                            <select id="store-id">
+                                <option value="CA_1">CA_1 (California 1)</option>
+                                <option value="CA_2">CA_2 (California 2)</option>
+                                <option value="TX_1">TX_1 (Texas 1)</option>
+                                <option value="WI_1">WI_1 (Wisconsin 1)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Product Catalog (Item ID) [FOODS ONLY]</label>
+                            <input type="text" id="item-id" value="FOODS_3_090" placeholder="e.g., FOODS_3_090">
+                        </div>
+                        <button id="btn-predict" class="btn-primary">Initialize Inference <i class="fa-solid fa-microchip"></i></button>
+                    </div>
+                    
+                    <div class="result-card glass-panel">
+                        <h3>Inference Pipeline</h3>
+                        <div id="loader" class="hidden"><div class="spinner"></div><p>Calculating Rolling Means & Encodings...</p></div>
+                        <div id="prediction-output" class="hidden">
+                            <p class="label">Mathematical Expected Value</p>
+                            <h1 id="pred-value" class="glow-text">0.00</h1>
+                            <div class="rounded-box">
+                                <p>Required Inventory (Rounded Up): <strong id="pred-rounded" class="text-accent">0</strong> Units</p>
+                            </div>
+                            <div class="latency-badge"><i class="fa-solid fa-stopwatch"></i> API Latency: <span id="pred-latency">0</span> ms</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="health" class="view-section hidden">
+                <div class="health-grid">
+                    <div class="health-card glass-panel"><i class="fa-solid fa-server text-success"></i><h3>Inference Server</h3><p>Online & Active</p></div>
+                    <div class="health-card glass-panel"><i class="fa-solid fa-microchip text-info"></i><h3>Model Registry</h3><p>v1.2 (Production - Optuna Tuned)</p></div>
+                    <div class="health-card glass-panel"><i class="fa-solid fa-database text-success"></i><h3>Feature Store</h3><p>Connected (recent_history.parquet)</p></div>
+                    <div class="health-card glass-panel"><i class="fa-solid fa-memory text-warning"></i><h3>Memory Usage</h3><p>Optimized via gc.collect()</p></div>
+                </div>
+                <div class="glass-panel mt-30 story-content">
+                    <h3>MLOps Pipeline Architecture</h3>
+                    <ul>
+                        <li><strong>Data Versioning:</strong> Historical state tracked up to Day 1913.</li>
+                        <li><strong>Dynamic Feature Engine:</strong> Lags (7, 28) and Rolling Means (7, 28) are computed entirely on the fly by the FastAPI backend using Pandas vectorization.</li>
+                        <li><strong>Stateless Encoders:</strong> Extreme Target Encoders (Store+Item Mean/Std) are loaded directly into RAM via joblib for O(1) time complexity lookups.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="story" class="view-section hidden glass-panel story-content">
+                <h2>The Engineering Architecture</h2>
+                <p>This system tackles the Walmart M5 Forecasting Challenge, focusing strictly on the highly volatile <strong>FOODS</strong> category across 10 locations in 3 states.</p>
+                <br>
+                <h3>1. The Zero-Inflated Problem</h3>
+                <p>Over 61.7% of the raw data consisted of exact zeros (days where items didn't sell). Traditional Machine Learning models using RMSE (Root Mean Squared Error) fail here because they try to "guess" the exact day an intermittent spike happens, leading to severe over-forecasting and inventory wastage.</p>
+                <br>
+                <h3>2. The Tweedie Masterstroke</h3>
+                <p>Instead of forcing the model to guess spikes, the LightGBM architecture was configured with a <strong>Tweedie Objective Function (Variance Power 1.1)</strong>. Tweedie acts as a mathematical bridge between the Poisson distribution (for counts) and the Gamma distribution (for continuous right-skewed data). It predicts the <em>Statistically Expected Value</em> rather than the exact daily count, perfectly mirroring how supply-chain safety stocks are maintained.</p>
+                <br>
+                <h3>3. Feature Engineering at Scale</h3>
+                <p>To avoid massive RAM crashes (OOM Errors), standard One-Hot Encoding was abandoned. Instead, an Extreme Target Encoding strategy mapped the Mean and Std. Dev of each specific Store-Item combination into two continuous features. Furthermore, "Release Date Trimming" was applied to remove 6 Million fake zeros from before items were actually launched.</p>
+            </section>
+
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
