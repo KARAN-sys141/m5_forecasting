@@ -8,7 +8,3 @@ mlruns/
 
 # Environment variables
 .env
-
-# DVC ignored files (Models are tracked by DVC, not Git)
-models/*.pkl
-models/*.parquet
