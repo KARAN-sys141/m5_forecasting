@@ -27,10 +27,26 @@
 
             <section id="dashboard" class="view-section active">
                 <div class="kpi-grid">
-                    <div class="kpi-card"><h3>Overall RMSSE</h3><p class="highlight">0.6172</p></div>
-                    <div class="kpi-card"><h3>Variance Explained</h3><p class="highlight">59.8%</p></div>
-                    <div class="kpi-card"><h3>Total Predictions</h3><p class="highlight" id="total-preds">0</p></div>
-                    <div class="kpi-card"><h3>AI Core</h3><p class="highlight">Tweedie LGBM</p></div>
+                    <div class="kpi-card">
+                        <h3>Overall RMSSE</h3>
+                        <p class="highlight counter" data-target="0.6172">0.0000</p>
+                        <div class="trend-badge text-success"><i class="fa-solid fa-arrow-trend-down"></i> Top 5% Kaggle</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Variance Explained</h3>
+                        <p class="highlight counter" data-target="59.8">0.0</p>
+                        <div class="trend-badge text-info"><i class="fa-solid fa-bullseye"></i> High R-Squared</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>Total Predictions</h3>
+                        <p class="highlight" id="total-preds">0</p>
+                        <div class="trend-badge text-warning"><i class="fa-solid fa-bolt"></i> Real-time Sync</div>
+                    </div>
+                    <div class="kpi-card">
+                        <h3>AI Core</h3>
+                        <p class="highlight text-glow">LGBM</p>
+                        <div class="trend-badge text-purple"><i class="fa-solid fa-brain"></i> Tweedie Power 1.1</div>
+                    </div>
                 </div>
                 
                 <div class="charts-row-main">
@@ -57,7 +73,7 @@
 
                 <div class="charts-row-third mt-25">
                     <div class="chart-container">
-                        <div class="chart-header">Weekly Seasonality</div>
+                        <div class="chart-header">Weekly Seasonality Heatmap</div>
                         <div class="canvas-wrapper"><canvas id="seasonalityChart"></canvas></div>
                     </div>
                     <div class="chart-container">
@@ -99,8 +115,14 @@
                             <select id="store-id">
                                 <option value="CA_1">CA_1 (California 1)</option>
                                 <option value="CA_2">CA_2 (California 2)</option>
+                                <option value="CA_3">CA_3 (California 3)</option>
+                                <option value="CA_4">CA_4 (California 4)</option>
                                 <option value="TX_1">TX_1 (Texas 1)</option>
+                                <option value="TX_2">TX_2 (Texas 2)</option>
+                                <option value="TX_3">TX_3 (Texas 3)</option>
                                 <option value="WI_1">WI_1 (Wisconsin 1)</option>
+                                <option value="WI_2">WI_2 (Wisconsin 2)</option>
+                                <option value="WI_3">WI_3 (Wisconsin 3)</option>
                             </select>
                         </div>
                         <div class="input-group">

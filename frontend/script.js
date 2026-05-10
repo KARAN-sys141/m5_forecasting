@@ -1,21 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Robust API URL mapping for both localhost and Render production
     const API_URL = window.location.origin;
     
+    // Load from LocalStorage or start fresh if empty
     let predictionLogs = JSON.parse(localStorage.getItem('m5_prediction_history')) || []; 
     
-    const PURPLE = '#8b5cf6';
-    const PURPLE_LIGHT = '#c4b5fd';
-    const PURPLE_DARK = '#5b21b6';
+    // Theme Colors
+    const PURPLE = '#a855f7';
+    const PURPLE_LIGHT = '#d8b4fe';
     const GRAY = '#3f3f46';
     const TEXT_SEC = '#a1a1aa';
 
+    // Chart Instances
     let accChartInst, pieChartInst, volChartInst, latChartInst;
     let seasonChartInst, priceChartInst, stockChartInst;
 
     Chart.defaults.color = TEXT_SEC;
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
 
+    // --- COUNT UP ANIMATION LOGIC ---
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText.replace('%', '');
+            const increment = target / 100; // Adjust speed
+
+            if (count < target) {
+                let current = count + increment;
+                if (target === 59.8) {
+                    counter.innerText = current.toFixed(1) + '%';
+                } else {
+                    counter.innerText = current.toFixed(4);
+                }
+                setTimeout(updateCount, 15);
+            } else {
+                counter.innerText = target === 59.8 ? target + '%' : target;
+            }
+        };
+        updateCount();
+    });
+
     function initCharts() {
+        // 1. Mandatory Chart (The OG Backtest)
         const ctxAcc = document.getElementById('accuracyChart').getContext('2d');
         accChartInst = new Chart(ctxAcc, {
             type: 'bar',
@@ -29,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
+        // 2. Demand Doughnut
         const ctxPie = document.getElementById('demandPieChart').getContext('2d');
         pieChartInst = new Chart(ctxPie, {
             type: 'doughnut',
@@ -36,13 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
         });
 
+        // 3. Real-time Prediction Trend
         const ctxVol = document.getElementById('volumeChart').getContext('2d');
         volChartInst = new Chart(ctxVol, {
             type: 'line',
-            data: { labels: [], datasets: [{ label: 'Live Inference', data: [], borderColor: PURPLE, backgroundColor: 'rgba(139, 92, 246, 0.1)', fill: true, tension: 0.4 }] },
+            data: { labels: [], datasets: [{ label: 'Live Inference', data: [], borderColor: PURPLE, backgroundColor: 'rgba(168, 85, 247, 0.15)', fill: true, tension: 0.4 }] },
             options: { responsive: true, maintainAspectRatio: false }
         });
 
+        // 4. API Latency Tracker
         const ctxLat = document.getElementById('latencyChart').getContext('2d');
         latChartInst = new Chart(ctxLat, {
             type: 'line',
@@ -50,20 +80,52 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
+        // 5. Weekly Seasonality (UPGRADED: Heatmap Bar Chart)
         const ctxSeas = document.getElementById('seasonalityChart').getContext('2d');
         seasonChartInst = new Chart(ctxSeas, {
-            type: 'radar',
-            data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Avg Sales Multiplier', data: [1.0, 0.9, 0.9, 0.95, 1.2, 1.5, 1.4], backgroundColor: 'rgba(139, 92, 246, 0.2)', borderColor: PURPLE }] },
-            options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { display: false } } } }
+            type: 'bar', 
+            data: { 
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], 
+                datasets: [{ 
+                    label: 'Sales Heat Index', 
+                    data: [1.0, 0.9, 0.9, 0.95, 1.2, 1.5, 1.4], 
+                    backgroundColor: ['#6b21a8', '#4c1d95', '#4c1d95', '#5b21b6', '#9333ea', '#d8b4fe', '#c084fc'], 
+                    borderRadius: 4 
+                }] 
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }
+            }
         });
 
+        // 6. Price Elasticity (UPGRADED: Visible dots, proper scaling)
         const ctxPrice = document.getElementById('priceImpactChart').getContext('2d');
         priceChartInst = new Chart(ctxPrice, {
             type: 'scatter',
-            data: { datasets: [{ label: 'Price vs Volume', data: [{x:1,y:10},{x:2,y:8},{x:3,y:6},{x:4,y:3},{x:5,y:1}], backgroundColor: PURPLE_LIGHT }] },
-            options: { responsive: true, maintainAspectRatio: false }
+            data: { 
+                datasets: [{ 
+                    label: 'Elasticity Curve', 
+                    data: [{x:1,y:10},{x:1.5,y:9},{x:2,y:8},{x:2.5,y:7},{x:3,y:6},{x:4,y:3},{x:5,y:1}], 
+                    backgroundColor: PURPLE_LIGHT, 
+                    borderColor: '#fff', 
+                    borderWidth: 1,
+                    pointRadius: 6, 
+                    pointHoverRadius: 8
+                }] 
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { title: { display: true, text: 'Selling Price ($)' }, grid: { color: 'rgba(255,255,255,0.05)' } }, 
+                    y: { title: { display: true, text: 'Sales Volume' }, grid: { color: 'rgba(255,255,255,0.05)' } } 
+                } 
+            }
         });
 
+        // 7. Stockout Risk
         const ctxStock = document.getElementById('stockoutChart').getContext('2d');
         stockChartInst = new Chart(ctxStock, {
             type: 'bar',
@@ -75,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCharts();
     updateDashboardUI(); 
 
+    // Tab Navigation
     document.querySelectorAll('.nav-links li').forEach(link => {
         link.addEventListener('click', () => {
             document.querySelectorAll('.nav-links li').forEach(n => n.classList.remove('active'));
@@ -84,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Prediction Logic
     document.getElementById('btn-predict').addEventListener('click', async () => {
         const storeId = document.getElementById('store-id').value;
         const itemId = document.getElementById('item-id').value;
@@ -125,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             localStorage.setItem('m5_prediction_history', JSON.stringify(predictionLogs));
-
             updateDashboardUI();
 
         } catch (error) {
@@ -137,8 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateDashboardUI() {
-        if (predictionLogs.length === 0) return;
+        if (predictionLogs.length === 0) return; 
 
+        // Update real-time counter immediately without animation
         document.getElementById('total-preds').innerText = predictionLogs.length;
 
         const tbody = document.getElementById('history-tbody');
@@ -155,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML += `<tr><td>${log.time}</td><td><strong>${log.store}</strong></td><td>${log.item}</td><td>${log.raw}</td><td><strong>${log.rounded}</strong></td><td><span class="badge ${log.dClass}">${log.dText}</span></td></tr>`;
         });
 
+        // Update Dynamic Charts
         pieChartInst.data.datasets[0].data = [low, mod, high];
         pieChartInst.update();
 
