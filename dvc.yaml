@@ -1,0 +1,12 @@
+stages:
+  data_processing_and_training:
+    cmd: python backend/mlflow_utils.py 
+    
+    deps:
+      - backend/ml_engine.py
+      - backend/mlflow_utils.py
+      
+    outs:
+      - models/lgbm_forecaster.pkl
+      - models/target_encoders.pkl
+      - models/recent_history.parquet

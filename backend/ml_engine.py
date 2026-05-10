@@ -5,11 +5,9 @@ import joblib
 import os
 import time
 
-# Automatically point to the models folder
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.path.join(BASE_DIR, 'models')
 
-# Global variables to hold artifacts in RAM for lightning-fast inference
 model = None
 encoders = None
 history_df = None
@@ -25,7 +23,6 @@ def load_artifacts():
 def predict_sales(store_id: str, item_id: str):
     start_time = time.time()
     
-    # 1. Fetch item history
     item_history = history_df[(history_df['store_id'] == store_id) & (history_df['item_id'] == item_id)].copy()
     
     if item_history.empty:
@@ -33,11 +30,9 @@ def predict_sales(store_id: str, item_id: str):
     
     item_history.sort_values('d', inplace=True)
     
-    # Target date to predict (Next day)
     last_day = item_history['d'].max()
     next_day = last_day + 1
     
-    # 2. Dynamic Feature Engineering on the fly!
     try:
         lag_7 = item_history[item_history['d'] == next_day - 7]['sales'].values[0]
         lag_28 = item_history[item_history['d'] == next_day - 28]['sales'].values[0]
@@ -55,15 +50,12 @@ def predict_sales(store_id: str, item_id: str):
     except IndexError:
         return {"error": "Not enough historical data (minimum 28 days required) to calculate lag features."}
     
-    # 3. Target Encoding lookup (O(1) time complexity)
     enc_mean = encoders.get(store_id, {}).get(item_id, {}).get('mean', 0)
     enc_std = encoders.get(store_id, {}).get(item_id, {}).get('std', 0)
     
-    # Extract Department and Time specs
     dept_id = item_id.rsplit('_', 1)[0]
-    wday, month = 1, 5 # Mocking Date for API simplicity
+    wday, month = 1, 5
     
-    # 4. Construct Feature DataFrame for LightGBM
     features = pd.DataFrame([{
         'item_id': item_id, 'dept_id': dept_id, 'store_id': store_id, 
         'wday': wday, 'month': month, 'lag_7': lag_7, 'lag_28': lag_28, 
@@ -75,13 +67,11 @@ def predict_sales(store_id: str, item_id: str):
     for col in ['item_id', 'dept_id', 'store_id', 'wday', 'month']:
         features[col] = features[col].astype('category')
         
-    # 5. Predict
     pred = model.predict(features)[0]
-    pred = max(0, float(pred)) # Clean up negative predictions
+    pred = max(0, float(pred))
     
     latency = round((time.time() - start_time) * 1000, 2)
     
-    # Extract trend data for frontend Mini-Charts
     trend_dates = ["d_" + str(d) for d in item_history['d'].tail(14).tolist()]
     trend_sales = item_history['sales'].tail(14).tolist()
     

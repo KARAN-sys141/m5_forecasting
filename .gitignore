@@ -1,5 +1,14 @@
+# Python cache
 __pycache__/
-models/*.parquet
-models/*.pkl
-*.db
+*.pyc
+
+# MLflow files
+mlflow.db
+mlruns/
+
+# Environment variables
 .env
+
+# DVC ignored files (Models are tracked by DVC, not Git)
+models/*.pkl
+models/*.parquet

@@ -27,7 +27,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .kpi-card h3 { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px; }
 .highlight { font-size: 1.8rem; font-weight: bold; color: var(--accent); }
 
-/* STRICT CHART GRIDS FIX */
 .charts-row-main { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
 .charts-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
 .charts-row-third { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
@@ -39,7 +38,7 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
     padding: 20px; 
     display: flex; 
     flex-direction: column; 
-    height: 380px; /* Fixed height so they don't stretch infinitely */
+    height: 380px;
 }
 .chart-header { 
     font-size: 0.9rem; 
@@ -57,7 +56,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
     width: 100%; 
 }
 
-/* Table Setup */
 .table-responsive { width: 100%; overflow-x: auto; margin-top: 15px; }
 .history-table { width: 100%; border-collapse: collapse; text-align: left; }
 .history-table th, .history-table td { padding: 12px; border-bottom: 1px solid var(--border); }
@@ -67,7 +65,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .bg-mod { background: rgba(245, 158, 11, 0.2); color: #fbbf24; } 
 .bg-high { background: rgba(139, 92, 246, 0.3); color: #c4b5fd; } 
 
-/* Predict UI */
 .predict-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .input-group { margin-bottom: 20px; }
 .input-group label { display: block; margin-bottom: 8px; color: var(--text-secondary); }
@@ -82,7 +79,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .hidden { display: none !important; }
 
-/* Health & Story Formatting */
 .health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
 .health-card { text-align: center; }
 .health-card i { font-size: 2.5rem; margin-bottom: 15px; }

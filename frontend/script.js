@@ -1,17 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = "http://127.0.0.1:8000";
     
-    // 💡 THE FIX: Load from LocalStorage or start fresh if empty
     let predictionLogs = JSON.parse(localStorage.getItem('m5_prediction_history')) || []; 
     
-    // Theme Colors
     const PURPLE = '#8b5cf6';
     const PURPLE_LIGHT = '#c4b5fd';
     const PURPLE_DARK = '#5b21b6';
     const GRAY = '#3f3f46';
     const TEXT_SEC = '#a1a1aa';
 
-    // Chart Instances
     let accChartInst, pieChartInst, volChartInst, latChartInst;
     let seasonChartInst, priceChartInst, stockChartInst;
 
@@ -19,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
 
     function initCharts() {
-        // 1. Mandatory Chart (The OG Backtest)
         const ctxAcc = document.getElementById('accuracyChart').getContext('2d');
         accChartInst = new Chart(ctxAcc, {
             type: 'bar',
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // 2. Demand Doughnut
         const ctxPie = document.getElementById('demandPieChart').getContext('2d');
         pieChartInst = new Chart(ctxPie, {
             type: 'doughnut',
@@ -41,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
         });
 
-        // 3. Real-time Prediction Trend
         const ctxVol = document.getElementById('volumeChart').getContext('2d');
         volChartInst = new Chart(ctxVol, {
             type: 'line',
@@ -49,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // 4. API Latency Tracker
         const ctxLat = document.getElementById('latencyChart').getContext('2d');
         latChartInst = new Chart(ctxLat, {
             type: 'line',
@@ -57,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // 5. Weekly Seasonality
         const ctxSeas = document.getElementById('seasonalityChart').getContext('2d');
         seasonChartInst = new Chart(ctxSeas, {
             type: 'radar',
@@ -65,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false, scales: { r: { ticks: { display: false } } } }
         });
 
-        // 6. Price Elasticity
         const ctxPrice = document.getElementById('priceImpactChart').getContext('2d');
         priceChartInst = new Chart(ctxPrice, {
             type: 'scatter',
@@ -73,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
             options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // 7. Stockout Risk
         const ctxStock = document.getElementById('stockoutChart').getContext('2d');
         stockChartInst = new Chart(ctxStock, {
             type: 'bar',
@@ -82,11 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initialize charts and instantly load previous history on page refresh
     initCharts();
     updateDashboardUI(); 
 
-    // Tab Navigation
     document.querySelectorAll('.nav-links li').forEach(link => {
         link.addEventListener('click', () => {
             document.querySelectorAll('.nav-links li').forEach(n => n.classList.remove('active'));
@@ -96,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Prediction Logic
     document.getElementById('btn-predict').addEventListener('click', async () => {
         const storeId = document.getElementById('store-id').value;
         const itemId = document.getElementById('item-id').value;
@@ -126,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('pred-rounded').innerText = roundedVal;
             document.getElementById('pred-latency').innerText = latency;
 
-            // Update Array
             predictionLogs.push({ 
                 time: new Date().toLocaleTimeString(), 
                 store: storeId, 
@@ -138,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 dText: dText 
             });
 
-            // 💡 THE FIX: Save updated array permanently to browser storage
             localStorage.setItem('m5_prediction_history', JSON.stringify(predictionLogs));
 
             updateDashboardUI();
@@ -152,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateDashboardUI() {
-        if (predictionLogs.length === 0) return; // Skip if no history exists
+        if (predictionLogs.length === 0) return;
 
         document.getElementById('total-preds').innerText = predictionLogs.length;
 
@@ -170,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML += `<tr><td>${log.time}</td><td><strong>${log.store}</strong></td><td>${log.item}</td><td>${log.raw}</td><td><strong>${log.rounded}</strong></td><td><span class="badge ${log.dClass}">${log.dText}</span></td></tr>`;
         });
 
-        // Update Dynamic Charts
         pieChartInst.data.datasets[0].data = [low, mod, high];
         pieChartInst.update();
 
