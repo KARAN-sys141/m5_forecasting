@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, 'models', 'lgbm_forecaster.pkl')
 
 def register_model_to_mlflow():
-    print("🚀 Initializing MLflow Registry...")
+    print("Initializing MLflow Registry...")
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("M5_Demand_Forecasting")
     
@@ -28,7 +28,7 @@ def register_model_to_mlflow():
         model = joblib.load(MODEL_PATH)
         mlflow.lightgbm.log_model(model, "lgbm_model", registered_model_name="M5_Forecaster_V1")
         
-        print("✅ Model successfully registered in MLflow!")
+        print("Model successfully registered in MLflow!")
 
 if __name__ == "__main__":
     register_model_to_mlflow()

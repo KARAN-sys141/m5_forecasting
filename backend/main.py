@@ -21,10 +21,9 @@ class ForecastRequest(BaseModel):
 def startup_event():
     ml_engine.load_artifacts()
 
-# Health Check Route (Moved to avoid clashing with UI)
 @app.get("/api-status")
 def read_root():
-    return {"status": "API is live! 🚀", "model": "LightGBM Tweedie"}
+    return {"status": "API is live!", "model": "LightGBM Tweedie"}
 
 @app.post("/predict")
 def predict(request: ForecastRequest):

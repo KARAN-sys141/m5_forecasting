@@ -15,7 +15,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .sidebar { width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 20px 0; }
 .brand { padding: 0 20px 30px; display: flex; align-items: center; gap: 10px; color: var(--accent); font-size: 1.2rem; }
 
-/* Enhanced Sidebar Animations */
 .nav-links { list-style: none; }
 .nav-links li { 
     padding: 15px 25px; 
@@ -42,7 +41,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .main-content { flex: 1; padding: 30px; overflow-y: auto; }
 .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 
-/* Dashboard Grids */
 .mt-25 { margin-top: 25px; }
 .mt-30 { margin-top: 30px; }
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 12px; padding: 25px; }
@@ -51,7 +49,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .kpi-card h3 { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px; }
 .highlight { font-size: 1.8rem; font-weight: bold; color: var(--accent); }
 
-/* Trend Badges (Fake Sparklines) */
 .trend-badge { font-size: 0.8rem; margin-top: 8px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
 .text-success { color: #10b981; } 
 .text-info { color: #3b82f6; } 
@@ -59,7 +56,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .text-purple { color: var(--accent); }
 .text-glow { text-shadow: 0 0 15px var(--accent-glow); color: #fff; }
 
-/* Chart Grids Fix */
 .charts-row-main { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
 .charts-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
 .charts-row-third { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
@@ -76,7 +72,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .chart-header { font-size: 0.9rem; color: var(--text-secondary); text-align: center; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 .canvas-wrapper { flex-grow: 1; position: relative; height: 100%; width: 100%; }
 
-/* Table Setup */
 .table-responsive { width: 100%; overflow-x: auto; margin-top: 15px; }
 .history-table { width: 100%; border-collapse: collapse; text-align: left; }
 .history-table th, .history-table td { padding: 12px; border-bottom: 1px solid var(--border); }
@@ -86,7 +81,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 .bg-mod { background: rgba(245, 158, 11, 0.2); color: #fbbf24; } 
 .bg-high { background: rgba(168, 85, 247, 0.3); color: #d8b4fe; } 
 
-/* Predict UI */
 .predict-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .input-group { margin-bottom: 20px; }
 .input-group label { display: block; margin-bottom: 8px; color: var(--text-secondary); }
@@ -102,7 +96,6 @@ body { background-color: var(--bg-color); color: var(--text-primary); transition
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .hidden { display: none !important; }
 
-/* Health & Story Formatting */
 .health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
 .health-card { text-align: center; }
 .health-card i { font-size: 2.5rem; margin-bottom: 15px; }

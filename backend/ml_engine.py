@@ -14,11 +14,11 @@ history_df = None
 
 def load_artifacts():
     global model, encoders, history_df
-    print("⏳ Loading ML Artifacts into RAM...")
+    print("Loading ML Artifacts into RAM...")
     model = joblib.load(os.path.join(MODEL_DIR, 'lgbm_forecaster.pkl'))
     encoders = joblib.load(os.path.join(MODEL_DIR, 'target_encoders.pkl'))
     history_df = pd.read_parquet(os.path.join(MODEL_DIR, 'recent_history.parquet'))
-    print("✅ ML Engine Ready & Artifacts Loaded Successfully!")
+    print("ML Engine Ready & Artifacts Loaded Successfully!")
 
 def predict_sales(store_id: str, item_id: str):
     start_time = time.time()

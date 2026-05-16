@@ -8,3 +8,5 @@ mlruns/
 
 # Environment variables
 .env
+powerbi_export.py
+powerbi_master_data.csv
